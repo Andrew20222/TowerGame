@@ -6,8 +6,6 @@ using UnityEngine;
 
 namespace CodeBase.Enemy
 {
-
-	[RequireComponent(typeof(EnemyAnimator))]
 	public class EnemyRangeAttack : Attack
 	{
 		public CheckClosestEnemy ClosestEnemy;
@@ -17,33 +15,30 @@ namespace CodeBase.Enemy
 		[SerializeField] private GameObject _shootVFX;
 
 		private bool _isShooting;
-
-
+		
 		public override void EnableAttack()
 		{
 			base.EnableAttack();
-			MoveToPlayer.StopMoving();
 		}
 
 		public override void DisableAttack()
 		{
 			base.DisableAttack();
-			MoveToPlayer.StartMoving();
 		}
 
-		private void OnAttack()
+		public override void OnAttack()
 		{
+			MoveToPlayer.StopMove();
 			if (ClosestEnemy.ClosestEnemy)
 			{
 				StartCoroutine(Shoot());
 			}
 		}
-		
-		private void OnAttackEnded()
+
+		public override void OnAttackEnded()
 		{
-			MoveToPlayer.enabled = true;
-			_attackCooldown = AttackCooldown;
-			_isAttacking = false;
+			base.OnAttackEnded();
+			MoveToPlayer.StartMove();
 		}
 
 		private IEnumerator Shoot()

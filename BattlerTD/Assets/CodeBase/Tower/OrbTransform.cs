@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace CodeBase.Tower
@@ -22,24 +23,31 @@ namespace CodeBase.Tower
 
 		private void Update()
 		{
-			Vector3 rayOrigin = transform.position;
+			Vector3 rayOrigin = _visual.position;
 
 			_upRay = new Ray(rayOrigin, transform.up);
-			RaycastHit upHit;
-			RaycastHit downHit;
+			_downwRay = new Ray(rayOrigin, -transform.up);
 
-			bool raycastUp = Physics.Raycast(_upRay, out upHit, _rayLengthUp * _sideMultiplier, _layerMask);
-			bool raycastDown = Physics.Raycast(_upRay, out downHit, _rayLengthDown, _layerMask);
+			bool raycastUp = Physics.Raycast(_upRay, out RaycastHit _, _rayLengthUp * _sideMultiplier, _layerMask);
+			bool raycastDown = Physics.Raycast(_downwRay, out RaycastHit _, _rayLengthDown * _sideMultiplier, _layerMask);
 			
 			if (raycastUp)
 			{
-				_visual.localPosition = new Vector3(_visual.localPosition.x, upHit.point.y + _offset, _visual.localPosition.z);
+				_visual.localPosition = new Vector3(_visual.localPosition.x, _visual.localPosition.y + _offset, _visual.localPosition.z);
+				Debug.Log("Up");
 			}
 
 			if (!raycastUp && !raycastDown)
 			{
 				_visual.localPosition = new Vector3(_visual.localPosition.x, _cachedHeightPosition, _visual.localPosition.z);
 			}
+		}
+
+		private void OnDrawGizmos()
+		{
+			Gizmos.color = Color.red;
+			Gizmos.DrawRay(transform.position,transform.up * _sideMultiplier);
+			Gizmos.DrawRay(transform.position,-transform.up * _sideMultiplier);
 		}
 	}
 }

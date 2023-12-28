@@ -7,6 +7,8 @@ namespace CodeBase.StaticData
 	public class TowerStaticData : ScriptableObject
 	{
 		public TowerType TowerTypeId;
+
+		public int Cost;
     
 		[Range(1,1000)]
 		public float Damage;

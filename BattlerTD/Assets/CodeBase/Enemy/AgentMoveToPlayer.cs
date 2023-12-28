@@ -8,16 +8,13 @@ namespace CodeBase.Enemy
 {
 	public class AgentMoveToPlayer : Follow
 	{
-		public NavMeshAgent Agent;
-		public Attack _enemyMeleeAttack;
-
 		private const float MinimalDistance = 1.1f;
+		
+		public NavMeshAgent Agent;
+		public Attack _enemyAttack;
 
-		public bool CanMove { get; set; }
-
-		//private IGameFactory _gameFactory;
-		public Transform _targetTransform;
-		public Transform _cachedKingTransform;
+		private Transform _targetTransform;
+		private Transform _cachedKingTransform;
 		private float _cachedSpeed;
 		private bool _isSpeedDecreased;
 
@@ -30,7 +27,7 @@ namespace CodeBase.Enemy
 			set
 			{
 				_targetTransform = value;
-				_enemyMeleeAttack.Construct(_targetTransform);
+				_enemyAttack.Construct(_targetTransform);
 			}
 		}
 
@@ -41,32 +38,27 @@ namespace CodeBase.Enemy
 		{
 			_cachedSpeed = Agent.speed;
 			_cachedKingTransform = _targetTransform;
-			CanMove = true;
 		}
 
 		private void Update()
 		{
 			if (TargetTransform && IsHeroNotReached())
 				Agent.destination = TargetTransform.position;
-
-			if (_isSpeedDecreased)
-				return;
-
-			if (CanMove)
-				StartMoving();
-			else
-				StopMoving();
 		}
+
+		public void StopMove() =>
+			Agent.speed = 0;
+
+		public void StartMove() =>
+			Agent.speed = _cachedSpeed;
 
 		public void ChangeToNewTarget(Transform newTarget)
 		{
-			Agent.stoppingDistance = 1.5f;
 			TargetTransform = newTarget;
 		}
 
 		public void ChangeToOldTarget()
 		{
-			Agent.stoppingDistance = 2.2f;
 			TargetTransform = _cachedKingTransform;
 		}
 
@@ -88,13 +80,8 @@ namespace CodeBase.Enemy
 			}
 		}
 
-		public void StartMoving() =>
-			Agent.speed = _cachedSpeed;
-
-		public void StopMoving() =>
-			Agent.speed = 0;
-
 		private bool IsHeroNotReached() =>
 			Agent.transform.position.SqrMagnitudeTo(TargetTransform.position) >= MinimalDistance;
+
 	}
 }

@@ -23,12 +23,12 @@ namespace CodeBase.Infrastructure.States
 		private readonly AllServices _services;
 		private readonly AudioSource _audioSource;
 
-		public BootstrapState(GameStateMachine stateMachine, SceneLoader sceneLoader, AllServices services)
+		public BootstrapState(GameStateMachine stateMachine, SceneLoader sceneLoader, AllServices services, AudioSource audioSource)
 		{
 			_stateMachine = stateMachine;
 			_sceneLoader = sceneLoader;
 			_services = services;
-
+			_audioSource = audioSource;
 			RegisterServices();
 		}
 
@@ -43,8 +43,7 @@ namespace CodeBase.Infrastructure.States
 		{
 			RegisterStaticDataService();
 
-
-			_services.RegisterSingle<IAudioService>(new AudioService(_audioSource));
+			_services.RegisterSingle<IAudioService>(new AudioService(_services.Single<IStaticDataService>(), _audioSource));
 			_services.RegisterSingle<IGameStateMachine>(_stateMachine);
 			_services.RegisterSingle<IAssetProvider>(new AssetProvider());
 			_services.RegisterSingle(InputService());
@@ -56,7 +55,8 @@ namespace CodeBase.Infrastructure.States
 				_services.Single<IAssetProvider>(),
 				_services.Single<IStaticDataService>(),
 				_services.Single<IPersistentProgressService>(),
-				 _services.Single<ITimerService>()));
+				_services.Single<ITimerService>(),
+				_stateMachine));
 
 			_services.RegisterSingle<IWindowService>(new WindowService(_services.Single<IUIFactory>(), _services.Single<ITimerService>()));
 
@@ -73,7 +73,8 @@ namespace CodeBase.Infrastructure.States
 				_services.Single<IPersistentProgressService>(),
 				_services.Single<IGameFactory>()));
 
-			_services.RegisterSingle<IBuildingService>(new BuildingService(_services.Single<IInputService>(), _services.Single<IGameFactory>(), _services.Single<IStaticDataService>()));
+			_services.RegisterSingle<IBuildingService>(new BuildingService(_services.Single<IInputService>(), _services.Single<IGameFactory>(),
+				_services.Single<IStaticDataService>(), _services.Single<IPersistentProgressService>()));
 		}
 
 

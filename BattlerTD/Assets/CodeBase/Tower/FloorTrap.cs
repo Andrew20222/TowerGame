@@ -10,6 +10,7 @@ namespace CodeBase.Tower
 		{
 			if (Placed)
 				return;
+			
 			if (_buildingService.CanBePlaced(this, _inAnotherTower))
 			{
 				_tower.material.color = Color.green;

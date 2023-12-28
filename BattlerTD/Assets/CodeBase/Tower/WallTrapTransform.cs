@@ -13,7 +13,6 @@ namespace CodeBase.Tower
 		[SerializeField] private float _sideMultiplier;
 		[SerializeField] private PlaceableObject _placeableObject;
 
-		private IBuildingService _buildingService;
 		private Ray _backwardRay;
 		private Ray _forwardRay;
 		private Ray _leftRay;
@@ -25,11 +24,6 @@ namespace CodeBase.Tower
 			{
 				return _isSnapped;
 			}
-		}
-
-		private void Awake()
-		{
-			_buildingService = AllServices.Container.Single<IBuildingService>();
 		}
 
 		private void Update()
@@ -91,8 +85,7 @@ namespace CodeBase.Tower
 			{
 				_isSnapped = false;
 			}
-
-			Debug.Log(_isSnapped);
+			
 			Debug.DrawRay(rayOrigin, transform.forward * ( _rayLength * _sideMultiplier ), Color.green);
 			Debug.DrawRay(rayOrigin, -transform.forward * ( _rayLength * _sideMultiplier ), Color.blue);
 			Debug.DrawRay(rayOrigin, -transform.right * ( _rayLength * _sideMultiplier ), Color.red);

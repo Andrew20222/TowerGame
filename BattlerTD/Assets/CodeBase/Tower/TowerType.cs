@@ -6,6 +6,7 @@ namespace CodeBase.Tower
 		LightningOrb = 1,
 		WallArrowTrap = 2,
 		FloorTrap = 3,
-		None = 4,
+		FloorDamageTrap = 4,
+		None = 5,
 	}
 }

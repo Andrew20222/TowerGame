@@ -1,10 +1,14 @@
+using System;
 using CodeBase.Data;
+using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Infrastructure.Services.StaticData;
 using CodeBase.Logic;
 using UnityEngine;
 
 namespace CodeBase.UI.Elements
 {
+
 	public class ActorUI : MonoBehaviour
 	{
 		public HpBar HeroHpBar;
@@ -46,7 +50,7 @@ namespace CodeBase.UI.Elements
 			if (_heroHealth != null)
 				_heroHealth.HealthChanged -= UpdateHeroHpBar;
 
-			if (_kingHealth!= null)
+			if (_kingHealth != null)
 				_kingHealth.HealthChanged -= UpdateKingHpBar;
 		}
 
@@ -54,8 +58,8 @@ namespace CodeBase.UI.Elements
 		{
 			if (HeroHpBar != null)
 				HeroHpBar.SetValue(_heroHealth.Current, _heroHealth.Max);
-		}	
-		
+		}
+
 		private void UpdateKingHpBar()
 		{
 			if (KingHpBar != null)

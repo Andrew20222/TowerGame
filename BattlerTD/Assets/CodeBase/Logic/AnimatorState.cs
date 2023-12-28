@@ -6,7 +6,7 @@ namespace CodeBase.Logic
     Idle,
     Attack,
     Walking,
-    Hurt,
+    Hit,
     Jumping,
     Died,
   }

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f6cfbc415a5421294b3418d38ba5ca7, type: 3}
+  m_Name: FloorDamageTrap
+  m_EditorClassIdentifier: 
+  TowerTypeId: 4
+  Cost: 5
+  Damage: 0
+  Cleavage: 0.5
+  ShootSpeed: 3
+  Prefab: {fileID: 4392666515378014262, guid: b4d2a3c66879b9b41a02d2193254cb2d, type: 3}

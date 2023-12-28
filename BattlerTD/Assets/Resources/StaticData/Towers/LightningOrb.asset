@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: LightningOrb
   m_EditorClassIdentifier: 
   TowerTypeId: 1
+  Cost: 7
   Damage: 0
   Cleavage: 0.5
   ShootSpeed: 3

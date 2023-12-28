@@ -1,5 +1,6 @@
 ﻿using CodeBase.Infrastructure.Services;
 using CodeBase.UI.Elements;
+using CodeBase.UI.Menu;
 using UnityEngine;
 
 namespace CodeBase.UI.Services.Factory
@@ -11,5 +12,6 @@ namespace CodeBase.UI.Services.Factory
     Transform UiRoot { get; }
     void CreateWinPanel();
     void CreateDeathPanel();
+    MainMenu CreateMainMenu();
   }
 }

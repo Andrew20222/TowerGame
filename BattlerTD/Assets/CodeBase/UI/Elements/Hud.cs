@@ -1,3 +1,4 @@
+using System;
 using CodeBase.Tower;
 using DG.Tweening;
 using SimpleInputNamespace;
@@ -8,9 +9,6 @@ namespace CodeBase.UI.Elements
 {
 	public class Hud : MonoBehaviour
 	{
-		[SerializeField] private Transform _attackButtonInGamePosition;
-		[SerializeField] private Transform _attackButtonStartPosition;
-		[SerializeField] private Transform _attackButton;
 		[SerializeField] private RectTransform _towerPanelStartPosition;
 		[SerializeField] private RectTransform _towerPanelInGamePosition;
 		[SerializeField] private TowerPanel _towerPanel;
@@ -34,7 +32,9 @@ namespace CodeBase.UI.Elements
 
 		public void Construct(IBuildingService buildingService) =>
 			_buildingService = buildingService;
-		
+
+		private void OnDestroy() =>
+			DOTween.KillAll();
 
 		public void AppearAttackButton()
 		{
@@ -45,14 +45,8 @@ namespace CodeBase.UI.Elements
 			}
 			
 			_buildingService.IsActive = false;
-			_attackButton.DOLocalMove(_attackButtonInGamePosition.localPosition, _appearDuration);
 		}
-
-		public void DisappearAttackButton()
-		{
-			_attackButton.DOLocalMove(_attackButtonStartPosition.localPosition, _appearDuration);
-		}
-
+		
 		public void DisappearTowerPanel() =>
 			_towerPanel.transform.DOLocalMove(_towerPanelStartPosition.localPosition, _appearDuration).OnComplete(() =>
 			{

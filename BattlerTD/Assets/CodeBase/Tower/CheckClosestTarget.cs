@@ -11,8 +11,7 @@ namespace CodeBase.Tower
 		private Transform _target;
 		public float Cleavage;
 		public Transform Target => _target;
-
-
+		
 		private void Awake() =>
 			_layerMask = 1 << LayerMask.NameToLayer(Enemy);
 
@@ -28,7 +27,6 @@ namespace CodeBase.Tower
 			}
 		}
 		
-
 		private bool Hit(out Collider hit)
 		{
 			int hitAmount = Physics.OverlapSphereNonAlloc(transform.position, Cleavage, _hits, _layerMask);

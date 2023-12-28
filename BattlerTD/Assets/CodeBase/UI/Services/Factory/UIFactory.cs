@@ -2,8 +2,10 @@
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.StaticData;
 using CodeBase.Infrastructure.Services.Timers;
+using CodeBase.Infrastructure.States;
 using CodeBase.StaticData.Windows;
 using CodeBase.UI.Elements;
+using CodeBase.UI.Menu;
 using CodeBase.UI.Services.Windows;
 using UnityEngine;
 
@@ -18,6 +20,7 @@ namespace CodeBase.UI.Services.Factory
 		private Transform _uiRoot;
 		private readonly IPersistentProgressService _progressService;
 		private readonly ITimerService _timerService;
+		private readonly IGameStateMachine _stateMachine;
 		private TowerPanel _towerPanel;
 
 		public Transform UiRoot
@@ -29,22 +32,21 @@ namespace CodeBase.UI.Services.Factory
 		}
 
 		public UIFactory(IAssetProvider assets, IStaticDataService staticData, IPersistentProgressService progressService,
-			ITimerService timerService)
+			ITimerService timerService, IGameStateMachine stateMachine)
 		{
 			_assets = assets;
 			_staticData = staticData;
 			_progressService = progressService;
 			_timerService = timerService;
+			_stateMachine = stateMachine;
 		}
 
-		public TowerPanel TowerPanel
+		public MainMenu CreateMainMenu()
 		{
-			get
-			{
-				return _towerPanel;
-			}
+			WindowConfig config = _staticData.ForMenu(WindowId.MainMenu);
+			MainMenu window = Object.Instantiate(config.MenuPrefab, _uiRoot);
+			return window;
 		}
-
 		public void CreateWinPanel()
 		{
 			WindowConfig config = _staticData.ForWinPanel(WindowId.WinPanel);

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2091a37287c149d3943837ecd5fd3e5e, type: 3}
+  m_Name: DeathElemental
+  m_EditorClassIdentifier: 
+  MonsterTypeId: 7
+  Hp: 150
+  Damage: 100
+  MaxLootValue: 10
+  MinLootValue: 0
+  EffectiveDistance: 0.5
+  Cleavage: 0.5
+  MoveSpeed: 3
+  Prefab: {fileID: 4107925125973944480, guid: fc1435d210c9ca34293754b3ecfce167, type: 3}

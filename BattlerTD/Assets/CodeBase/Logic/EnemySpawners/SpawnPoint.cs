@@ -17,14 +17,14 @@ namespace CodeBase.Logic.EnemySpawners
 		[SerializeField] private float _delayBetweenSpawn = 7;
 		public MonsterTypeId MeleeMonsterTypeId;
 		public MonsterTypeId RangeMonsterTypeId;
-		
+
+		public Action<SpawnPoint> DestroySpawner;
 		public string Id { get; set; }
 
 		private IGameFactory _factory;
 
 		private EnemyDeath _enemyDeath;
-
-		private bool _slain;
+		
 		public bool _isActive;
 		private float _levelStage = 1;
 		public bool IsActive
@@ -36,6 +36,17 @@ namespace CodeBase.Logic.EnemySpawners
 			set
 			{
 				_isActive = value;
+			}
+		}
+		public float DelayBetweenSpawn
+		{
+			get
+			{
+				return _delayBetweenSpawn;
+			}
+			set
+			{
+				_delayBetweenSpawn = value;
 			}
 		}
 
@@ -52,8 +63,7 @@ namespace CodeBase.Logic.EnemySpawners
 		private void OnDestroy()
 		{
 			IsActive = false;
-			if (_enemyDeath != null)
-				_enemyDeath.Happened -= Slay;
+			DestroySpawner?.Invoke(this);	
 		}
 
 		public void StartSpawnMeleeMob(float times) =>
@@ -78,28 +88,18 @@ namespace CodeBase.Logic.EnemySpawners
 			{
 				CreateMob(MeleeMonsterTypeId);
 
-				yield return new WaitForSeconds(_delayBetweenSpawn);
+				yield return new WaitForSeconds(DelayBetweenSpawn);
 
 				CreateMob(RangeMonsterTypeId);
 				
-				yield return new WaitForSeconds(_delayBetweenSpawn);
+				yield return new WaitForSeconds(DelayBetweenSpawn);
 			}
 		}
 
 		private GameObject CreateMob(MonsterTypeId monsterTypeId)
 		{
 			GameObject monster = _factory.CreateMonster(monsterTypeId, transform);
-			_enemyDeath = monster.GetComponent<EnemyDeath>();
-			_enemyDeath.Happened += Slay;
 			return monster;
-		}
-
-		private void Slay()
-		{
-			if (_enemyDeath != null)
-				_enemyDeath.Happened -= Slay;
-
-			_slain = true;
 		}
 	}
 }

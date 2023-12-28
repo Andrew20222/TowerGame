@@ -9,6 +9,8 @@ namespace CodeBase.CameraLogic
 		[SerializeField] private float _rotationAngleY;
 		[SerializeField] private float _distance;
 		[SerializeField] private float _offsetY;
+		[SerializeField] private float _offsetX;
+		[SerializeField] private float _offsetZ;
 
 		public Transform _following;
 
@@ -33,6 +35,8 @@ namespace CodeBase.CameraLogic
 		{
 			Vector3 followingPosition = _following.position;
 			followingPosition.y += _offsetY;
+			followingPosition.x += _offsetX;
+			followingPosition.z += _offsetZ;
 
 			return followingPosition;
 		}

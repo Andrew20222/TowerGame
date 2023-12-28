@@ -7,5 +7,6 @@
     TowerPanel = 2,
     WinPanel = 3, 
     DeathPanel = 4,
+    MainMenu = 5,
   }
 }

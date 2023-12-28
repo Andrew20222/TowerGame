@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: FloorTrap
   m_EditorClassIdentifier: 
   TowerTypeId: 3
+  Cost: 5
   Damage: 0
   Cleavage: 0.5
   ShootSpeed: 3

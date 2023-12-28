@@ -13,7 +13,9 @@ using CodeBase.Logic;
 using CodeBase.Logic.EnemySpawners;
 using CodeBase.StaticData;
 using CodeBase.Tower;
+using CodeBase.UI;
 using CodeBase.UI.Elements;
+using CodeBase.UI.Menu;
 using CodeBase.UI.Services.Windows;
 using UnityEngine;
 using UnityEngine.AI;
@@ -33,44 +35,35 @@ namespace CodeBase.Infrastructure.Services.Factory
 		private readonly IWindowService _windowService;
 		private readonly IInputService _inputService;
 		private readonly IBuildingService _buildingServie;
+		private readonly ITimerService _timerService;
 		private readonly List<SpawnPoint> _spawners = new List<SpawnPoint>();
 		private GameObject _heroGameObject;
 
-		private List<GameObject> _monsters = new List<GameObject>();
 		private BossSpawnPoint _bossSpawner;
-		private ITimerService _timerService;
 		private GameObject _mainPumpkin;
-		private Hud _hud;
 		private TowerPanel _towerPanel;
+		private HeroesPreviewMainMenu _heroesPreview;
 
-		public GameObject MainPumpkinGameObject => _mainPumpkin;
+		public GameObject KingGameObject => _mainPumpkin;
 		public GameObject HeroGameObject => _heroGameObject;
 		public BossSpawnPoint BossSpawner => _bossSpawner;
 		public List<SpawnPoint> Spawners => _spawners;
 		public Action<GameObject> MonsterCreated { get; set; }
-		public List<GameObject> Monsters
-		{
-			get
-			{
-				return _monsters;
-			}
-			set
-			{
-				_monsters = value;
-			}
-		}
-		public Hud HUD
-		{
-			get
-			{
-				return _hud;
-			}
-		}
+		public List<GameObject> Monsters { get; } = new List<GameObject>();
+		public Hud HUD { get; private set; }
+
 		public TowerPanel Panel
 		{
 			get
 			{
 				return _towerPanel;
+			}
+		}
+		public HeroesPreviewMainMenu HeroesPreview
+		{
+			get
+			{
+				return _heroesPreview;
 			}
 		}
 
@@ -90,23 +83,41 @@ namespace CodeBase.Infrastructure.Services.Factory
 		public GameObject CreateHero(Vector3 at)
 		{
 			_heroGameObject = InstantiateRegistered(AssetPath.HeroPath, at);
-			_heroGameObject.GetComponent<HeroMove>().Construct(_timerService, _inputService);
+			_heroGameObject.GetComponent<HeroMove>().Construct(_timerService, _inputService, _persistentProgressService);
+			_heroGameObject.GetComponent<IHealth>().Construct(_randomService, _persistentProgressService);
 			return _heroGameObject;
+		}
+		public HeroesPreviewMainMenu CreateHeroVisual(Vector3 at)
+		{
+			_heroesPreview = InstantiateRegistered(AssetPath.HeroVisualPath, at).GetComponent<HeroesPreviewMainMenu>();
+
+			return _heroesPreview;
 		}
 
 		public Hud CreateHud()
 		{
-			_hud = InstantiateRegistered(AssetPath.HudPath).GetComponent<Hud>();
-			_hud.GetComponentInChildren<LootCounter>()
+			HUD = InstantiateRegistered(AssetPath.HudPath).GetComponent<Hud>();
+			HUD.GetComponentInChildren<UIAttackButton>().Construct(_heroGameObject.GetComponent<HeroRangeAttack>());
+			HUD.GetComponentInChildren<LootCounter>()
 				.Construct(_persistentProgressService.Progress.WorldData);	
-			_hud.GetComponentInChildren<WaveCounter>()
+			HUD.GetComponentInChildren<WaveCounter>()
 				.Construct(_persistentProgressService.Progress.KillData);
 
-			_towerPanel = _hud.GetComponentInChildren<TowerPanel>();
+			TowerUI[] towerUis = HUD.GetComponentsInChildren<TowerUI>();
+			foreach (TowerUI towerUi in towerUis)
+			{
+				if (towerUi.TowerType == TowerType.None)
+					break;
+
+				TowerStaticData towerData = _staticData.ForTower(towerUi.TowerType);
+				towerUi.TowerCost = towerData.Cost;
+			}
+
+			_towerPanel = HUD.GetComponentInChildren<TowerPanel>();
 			foreach (OpenWindowButton openWindowButton in HUD.GetComponentsInChildren<OpenWindowButton>())
 				openWindowButton.Init(_windowService);
 
-			return _hud;
+			return HUD;
 		}
 
 		public LootPiece CreateLoot()
@@ -126,6 +137,7 @@ namespace CodeBase.Infrastructure.Services.Factory
 			GameObject monster = Object.Instantiate(monsterData.Prefab, spawnPosition, Quaternion.identity);
 
 			IHealth health = monster.GetComponent<IHealth>();
+			health.Construct(_randomService, _persistentProgressService);
 			health.Current = monsterData.Hp;
 			health.Max = monsterData.Hp;
 
@@ -154,6 +166,8 @@ namespace CodeBase.Infrastructure.Services.Factory
 		{
 			TowerStaticData towerData = _staticData.ForTower(towerType);
 			GameObject tower = Object.Instantiate(towerData.Prefab, position, rotation);
+			PlaceableObject placeableObject = tower.GetComponent<PlaceableObject>();
+			placeableObject.TowerCost = towerData.Cost;
 			return tower;
 		}
 
@@ -163,6 +177,7 @@ namespace CodeBase.Infrastructure.Services.Factory
 			GameObject monster = Object.Instantiate(monsterData.Prefab, parent.position, Quaternion.identity);
 
 			IHealth health = monster.GetComponent<IHealth>();
+			health.Construct(_randomService, _persistentProgressService);
 			health.Current = monsterData.Hp;
 			health.Max = monsterData.Hp;
 
@@ -204,6 +219,7 @@ namespace CodeBase.Infrastructure.Services.Factory
 			spawner.MeleeMonsterTypeId = meleeMonsterTypeId;
 			spawner.RangeMonsterTypeId = rangeMonsterTypeId;
 			spawner.Id = spawnerId;
+			spawner.DestroySpawner += DestroySpawner;
 			Spawners.Add(spawner);
 		}
 
@@ -222,12 +238,6 @@ namespace CodeBase.Infrastructure.Services.Factory
 			return _mainPumpkin;
 		}
 
-		public Grid CreateGrid()
-		{
-			Grid grid = InstantiateRegistered(AssetPath.Grid).GetComponent<Grid>();
-			return grid;
-		}
-
 		public void Dispose()
 		{
 			Object.Destroy(_heroGameObject);
@@ -237,8 +247,11 @@ namespace CodeBase.Infrastructure.Services.Factory
 				Object.Destroy(monster.gameObject);
 			}
 
-			_monsters.Clear();
+			Monsters.Clear();
 		}
+
+		private void DestroySpawner(SpawnPoint spawnPoint) =>
+			Spawners.Remove(spawnPoint);
 
 		private void Register(ISavedProgressReader progressReader)
 		{
@@ -277,4 +290,5 @@ namespace CodeBase.Infrastructure.Services.Factory
 		}
 
 	}
+
 }

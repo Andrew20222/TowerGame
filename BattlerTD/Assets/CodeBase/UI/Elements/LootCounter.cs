@@ -12,14 +12,14 @@ namespace CodeBase.UI.Elements
     public void Construct(WorldData worldData)
     {
       _worldData = worldData;
-      _worldData.LootData.Changed += UpdateCounter;
+      _worldData.LootData.ChangedSilver += UpdateCounter;
     }
 
     private void Start() =>
       UpdateCounter();
 
     private void UpdateCounter() => 
-      Counter.text = $"{_worldData.LootData.Collected}";
+      Counter.text = $"{_worldData.LootData.CollectedSilver}";
   }
 
 }

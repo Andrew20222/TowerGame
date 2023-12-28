@@ -1,5 +1,4 @@
-﻿using System;
-using CodeBase.Data;
+﻿using CodeBase.Data;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Randomizer;
 using CodeBase.Logic;
@@ -23,15 +22,11 @@ namespace CodeBase.Enemy
       _randomizer = randomService;
     }
     
-    private void Start()
-    {
+    private void Start() =>
       EnemyDeath.Happened += SpawnLoot;
-    }
 
-    private void OnDestroy()
-    {
+    private void OnDestroy() =>
       EnemyDeath.Happened -= SpawnLoot;
-    }
 
     public void SetLootValue(int min, int max)
     {
@@ -53,9 +48,9 @@ namespace CodeBase.Enemy
 
     private Loot GenerateLoot()
     {
-      Loot loot = new Loot()
+      Loot loot = new Loot
       {
-        Value = _randomizer.Next(_minValue, _maxValue)
+        Value = _randomizer.Next(_minValue, _maxValue),
       };
       return loot;
     }

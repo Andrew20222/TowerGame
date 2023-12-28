@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 670fed1bccfc418f9ecdfc7d513fd1e8, type: 3}
+  m_Name: Sound
+  m_EditorClassIdentifier: 
+  MainMenuTheme: {fileID: 8300000, guid: 0757ac2996c85a7438dde361c388ec73, type: 3}
+  FightStageTheme: {fileID: 8300000, guid: 03fd2f014dc59434fa4810d3421a1894, type: 3}
+  BuildingStageTheme: {fileID: 0}
+  Explosion: {fileID: 8300000, guid: b9f07c4de02ee8947b7468fd5b96ddca, type: 3}

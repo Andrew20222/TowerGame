@@ -1,13 +1,19 @@
+using CodeBase.Infrastructure.Services.StaticData;
+using CodeBase.StaticData;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.Services.Audio
 {
 	public class AudioService : IAudioService
-	{ 
+	{
 		private readonly AudioSource _audioSource;
+		private readonly SoundStaticData _soundData;
 
-		public AudioService(AudioSource audioSource) =>
+		public AudioService(IStaticDataService staticData, AudioSource audioSource)
+		{
+			_soundData = staticData.ForSounds();
 			_audioSource = audioSource;
+		}
 
 		public void PlaySound(AudioClip clip)
 		{
@@ -15,8 +21,15 @@ namespace CodeBase.Infrastructure.Services.Audio
 			_audioSource.Play();
 		}
 
-		public void PlayBackgroundMusic()
+		public void PlayMainMenuMusic()
 		{
+			_audioSource.clip = _soundData.MainMenuTheme;
+			_audioSource.Play();
+		}	
+		
+		public void PlayFightStageMusic()
+		{
+			_audioSource.clip = _soundData.FightStageTheme;
 			_audioSource.Play();
 		}
 

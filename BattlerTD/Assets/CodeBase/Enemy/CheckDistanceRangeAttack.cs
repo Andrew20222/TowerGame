@@ -9,9 +9,5 @@ namespace CodeBase.Enemy
 		public CheckClosestEnemy TargetLocator;
 		public AgentMoveToPlayer MoveToPlayer;
 
-		private void Update()
-		{
-			MoveToPlayer.CanMove = TargetLocator.ClosestEnemy == null;
-		}
 	}
 }

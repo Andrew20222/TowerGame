@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: WallTrap
   m_EditorClassIdentifier: 
   TowerTypeId: 2
+  Cost: 7
   Damage: 10
   Cleavage: 0.5
   ShootSpeed: 3

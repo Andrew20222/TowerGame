@@ -4,24 +4,39 @@ namespace CodeBase.Infrastructure.Services.Inputs
 {
   public class StandaloneInputService : InputService
   {
-    public override Vector2 Axis
+    public override Vector2 MovingAxis
     {
       get
       {
-        Vector2 axis = SimpleInputAxis();
+        Vector2 axis = SimpleInputMovingAxis();
 
         if (axis == Vector2.zero)
         {
-          axis = UnityAxis();
+          axis = UnityMovingAxis();
+        }
+
+        return axis;
+      }
+    }
+    public override Vector2 RotatingAxis
+    {
+      get
+      {
+        Vector2 axis = SimpleInputRotatingAxis();
+
+        if (axis == Vector2.zero)
+        {
+          axis = UnityRotatingAxis();
         }
 
         return axis;
       }
     }
 
-    private static Vector2 UnityAxis()
-    {
-      return new Vector2(UnityEngine.Input.GetAxis(Horizontal), UnityEngine.Input.GetAxis(Vertical));
-    }
+    private static Vector2 UnityMovingAxis() =>
+      new Vector2(Input.GetAxis(Horizontal), Input.GetAxis(Vertical)); 
+    
+    private static Vector2 UnityRotatingAxis() =>
+      new Vector2(Input.GetAxis(Horizontal2), Input.GetAxis(Vertical2));
   }
 }

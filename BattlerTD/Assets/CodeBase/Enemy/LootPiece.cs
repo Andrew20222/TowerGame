@@ -79,7 +79,7 @@ namespace CodeBase.Enemy
     }
 
     private void UpdateCollectedLootAmount() =>
-      _worldData.LootData.Add(_loot.Value);
+      _worldData.LootData.AddSilver(_loot.Value);
 
     private void RemoveLootPieceFromSavedPieces()
     {

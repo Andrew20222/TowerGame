@@ -32,6 +32,7 @@ namespace CodeBase.Infrastructure.States
 		private readonly ITimerService _timerService;
 		private readonly IBuildingService _buildingService;
 		private GameObject _hero;
+		private bool _firstEnter = true;
 
 		public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain, IGameFactory gameFactory,
 			IPersistentProgressService progressService, IStaticDataService staticDataService, IUIFactory uiFactory, ITimerService timerService,
@@ -88,15 +89,17 @@ namespace CodeBase.Infrastructure.States
 			_hero = _gameFactory.CreateHero(levelData.InitialHeroPosition);
 			CameraFollow(_hero);
 			GameObject king = InitKing(levelData);
-			InitGrid();
+			InitGrid(levelData);
 			InitSpawners(levelData);
 			//InitBossSpawners();
 			InitLootPieces();
 			InitHud(_hero, king);
 		}
 
-		private void InitGrid() =>
-			_buildingService.Init();
+		private void InitGrid(LevelStaticData levelStaticData)
+		{
+			_buildingService.Init(levelStaticData.Grid);
+		}
 
 		private GameObject InitKing(LevelStaticData levelData) =>
 			_gameFactory.CreateKing(levelData.InitialMainBuildingPosition);

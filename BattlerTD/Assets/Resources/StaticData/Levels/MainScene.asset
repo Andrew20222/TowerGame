@@ -16,13 +16,13 @@ MonoBehaviour:
   BossSpawnerPosition: {x: 0, y: 0, z: 0}
   EnemySpawners:
   - Id: Main_30603d45-9ca1-41ea-9183-a8bfaf2db3f5
-    MeleeMonsterTypeId: 6
-    RangeMonsterTypeId: 7
+    MeleeMonsterTypeId: 11
+    RangeMonsterTypeId: 10
     Position: {x: 16.228823, y: -0.5, z: -59.9609}
     Rotation: {x: -0, y: -0.7071099, z: -0, w: -0.70710367}
   - Id: Main_834376db-0a83-4adc-a9e0-9e2fff9d917d
     MeleeMonsterTypeId: 6
-    RangeMonsterTypeId: 7
+    RangeMonsterTypeId: 8
     Position: {x: -8.861176, y: -0.5, z: -59.960754}
     Rotation: {x: -0, y: -0.7071099, z: -0, w: -0.70710367}
   InitialHeroPosition: {x: 3.7, y: 0.54047966, z: 3.36}

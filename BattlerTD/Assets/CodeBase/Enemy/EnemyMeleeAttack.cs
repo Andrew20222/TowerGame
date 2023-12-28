@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace CodeBase.Enemy
 {
-	[RequireComponent(typeof(EnemyAnimator))]
 	public class EnemyMeleeAttack : Attack
 	{
 		public float Cleavage = 0.5f;
@@ -13,25 +12,26 @@ namespace CodeBase.Enemy
 		
 		private Collider[] _hits = new Collider[1];
 
-		[SerializeField] private ParticleSystem ImpactFxPrefab;
+		[SerializeField] private ParticleSystem _impactFxPrefab;
 
-		private void OnAttack()
+		public override void OnAttack()
 		{
+			MoveToPlayer.StopMove();
 			if (Hit(out Collider hit))
 			{
 				//PhysicsDebug.DrawDebugCross(StartPoint(), Cleavage, 1.0f);
-				hit.transform.GetComponent<IHealth>().TakeDamage(Damage);
+				hit.transform.GetComponent<IHealth>().TakeDamage(Damage, _enemyHealth);
 				PlayTakeDamageFx(hit.transform.position);
 			}
 		}
 
-		private void OnAttackEnded()
+		public override void OnAttackEnded()
 		{
-			MoveToPlayer.enabled = true;
-			_attackCooldown = AttackCooldown;
-			_isAttacking = false;
+			base.OnAttackEnded();
+			MoveToPlayer.StartMove();
 		}
-		
+
+
 		private bool Hit(out Collider hit)
 		{
 			int hitAmount = Physics.OverlapSphereNonAlloc(StartPoint(), Cleavage, _hits, _layerMask);
@@ -52,8 +52,8 @@ namespace CodeBase.Enemy
 
 		private void PlayTakeDamageFx(Vector3 position)
 		{
-			ImpactFxPrefab.transform.position = position;
-			ImpactFxPrefab.Play();
+			_impactFxPrefab.transform.position = position;
+			_impactFxPrefab.Play();
 		}
 
 

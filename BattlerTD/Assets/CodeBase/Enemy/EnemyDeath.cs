@@ -1,15 +1,15 @@
 using System;
-using System.Collections;
 using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using UnityEngine;
 
 namespace CodeBase.Enemy
 {
-	[RequireComponent(typeof(EnemyHealth), typeof(EnemyAnimator))]
 	public class EnemyDeath : MonoBehaviour
 	{
 		[SerializeField] private Collider _collider;
+		[SerializeField] private Collider _hitBox;
+		[SerializeField] private Collider _aggroCollider;
 		[SerializeField] private EnemyHealth _health;
 		[SerializeField] private Aggro _aggro;
 		[SerializeField] private AgentMoveToPlayer _move;
@@ -20,7 +20,8 @@ namespace CodeBase.Enemy
 		[SerializeField] private GameObject _deathFx;
 		
 		private IPersistentProgressService _progressService;
-		
+		private float _destroyTimer = 1.5f;
+
 		public event Action Happened;
 
 		
@@ -38,26 +39,32 @@ namespace CodeBase.Enemy
 		private void OnHealthChanged()
 		{
 			if (_health.Current <= 0)
-				Die();
+				Die(_destroyTimer);
 		}
 
-		private void Die()
+		private void Die(float destroyTimer)
 		{
+			_hitBox.enabled = false;
+			_range.enabled = false;
 			_collider.enabled = false;
 			_health.HealthChanged -= OnHealthChanged;
-			_aggro.enabled = false;
-			_move.CanMove = false;
-			_move.StopMoving();
-			_rotateToHero.enabled = false;
-			_range.enabled = false;
-			_attack.DisableAttack();
 			
+			if (_aggro)
+			{
+				_aggroCollider.enabled = false;
+				_aggro.enabled = false;
+			}
+			
+			_move.Agent.speed = 0;
+			_attack.enabled = false;
+			_rotateToHero.enabled = false;
+
 			_animator.PlayDeath();
 			RegisterKilledMobs();
 			
 			// SpawnDeathFx();
 
-			Destroy(gameObject, 3);
+			Destroy(gameObject, destroyTimer);
 
 			Happened?.Invoke();
 		}

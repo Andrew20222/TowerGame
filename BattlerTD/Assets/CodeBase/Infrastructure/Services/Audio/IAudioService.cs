@@ -5,7 +5,8 @@ namespace CodeBase.Infrastructure.Services.Audio
 	public interface IAudioService : IService
 	{
 		void PlaySound(AudioClip clip);
-		void PlayBackgroundMusic();
+		void PlayMainMenuMusic();
+		void PlayFightStageMusic();
 		void PauseSound();
 		void ResumeSound();
 		void StopSound();

@@ -6,9 +6,10 @@ namespace CodeBase.Tower
 	{
 		[SerializeField] private MeshRenderer _trapMesh;
 		[SerializeField] private MeshRenderer[] _arrows;
-		
+
 		private void Update()
 		{
+			Debug.Log(_inAnotherTower);
 			if (Placed)
 				return;
 

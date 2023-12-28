@@ -4,6 +4,7 @@ namespace CodeBase.Enemy
 {
 	public abstract class Attack : MonoBehaviour
 	{
+		[SerializeField] protected EnemyHealth _enemyHealth;
 		[SerializeField] protected EnemyAnimator Animator;
 		[SerializeField] protected AgentMoveToPlayer MoveToPlayer;
 		[SerializeField] protected float AttackCooldown = 3.0f;
@@ -32,8 +33,17 @@ namespace CodeBase.Enemy
 		protected virtual void OnUpdate() =>
 			Update();
 
-		public virtual void DisableAttack() =>
+		public virtual void OnAttack(){}
+
+		public virtual void OnAttackEnded()
+		{
+			_attackCooldown = AttackCooldown;
+			_isAttacking = false;
+		}
+		public virtual void DisableAttack()
+		{
 			_attackIsActive = false;
+		}
 
 		public virtual void EnableAttack() =>
 			_attackIsActive = true;
@@ -52,8 +62,6 @@ namespace CodeBase.Enemy
 
 		private void StartAttack()
 		{
-			MoveToPlayer.enabled = false;
-			transform.LookAt(_heroTransform);
 			Animator.PlayAttack();
 			_isAttacking = true;
 		}

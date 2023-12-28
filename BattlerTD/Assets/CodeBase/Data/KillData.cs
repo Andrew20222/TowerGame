@@ -9,7 +9,7 @@ namespace CodeBase.Data
     public int CurrentMonsterWaves;
     public int MonsterWavesForFinish;
     
-    public Action LootChanged;
+    public Action KilledMobsChanged;
     public Action WaveChanged;
 
 
@@ -21,20 +21,19 @@ namespace CodeBase.Data
 
     public void ResetWaveData()
     {
-      MonsterWavesForFinish = 5;
+      MonsterWavesForFinish = 2;
       CurrentMonsterWaves = 0;
       WaveChanged?.Invoke();
     }
     public void Add(int lootValue)
     {
       KilledMobs += lootValue;
-      LootChanged?.Invoke();
+      KilledMobsChanged?.Invoke();
     } 
     
     public void ResetKillData()
     {
       KilledMobs = 0;
-      LootChanged?.Invoke();
     }
   }
 }

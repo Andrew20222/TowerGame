@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Infrastructure.Services.Randomizer;
 using CodeBase.Logic;
 using UnityEngine;
 
@@ -9,12 +10,13 @@ namespace CodeBase.Hero
 {
 	public class KingHealth : MonoBehaviour, IHealth, ISavedProgressReader
 	{
-		public MainBuildingAnimator Animator;
+		public KingAnimator Animator;
 		private State _state;
 
 		public event Action HealthChanged;
 		public Action Restart;
 		[SerializeField] private float _delayBeforeRestart = 2;
+
 		public float Current
 		{
 			get => _state.CurrentHP;
@@ -34,7 +36,13 @@ namespace CodeBase.Hero
 			get => _state.MaxHP;
 			set => _state.MaxHP = value;
 		}
-		public void TakeDamage(float damage)
+
+		public void Construct(IRandomService randomService, IPersistentProgressService progressService)
+		{
+			
+		}
+
+		public void TakeDamage(float damage, IHealth invoker)
 		{
 			if (Current <= 0)
 			{

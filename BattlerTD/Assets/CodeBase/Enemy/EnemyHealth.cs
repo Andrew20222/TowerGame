@@ -1,4 +1,6 @@
 using System;
+using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Infrastructure.Services.Randomizer;
 using CodeBase.Logic;
 using UnityEngine;
 
@@ -16,6 +18,10 @@ namespace CodeBase.Enemy
 		[SerializeField] private PickUpPopUp PickupPopup;
 		[SerializeField] private Canvas PickupPopupPrefab;
 		
+		private IRandomService _randomService;
+		private IPersistentProgressService _progressService;
+
+		[SerializeField] private int _criticalCounter = 0;
 		public event Action HealthChanged;
 
 		public float Current
@@ -30,15 +36,29 @@ namespace CodeBase.Enemy
 			set => _max = value;
 		}
 
-	
-		public void ResetPopUp() { }
-
-		public void TakeDamage(float damage)
+		public void Construct(IRandomService randomService, IPersistentProgressService progressService)
 		{
-			Current -= damage;
-			
+			_randomService = randomService;
+			_progressService = progressService;
+		}
+
+		public void TakeDamage(float damage,  IHealth invoker = null)
+		{
+			float next = _randomService.Next(1, 100);
+			if (next < _progressService.Progress.HeroStats.CriticalChance)
+			{
+				_criticalCounter++;
+				Debug.Log("Crit");
+				Debug.Log(_criticalCounter);
+				Current -= damage * _progressService.Progress.HeroStats.CriticalMultiplier;
+			}
+			else
+			{
+				Current -= damage;
+			}
+
 			//PickUpPopUp pickUpPopUp = Instantiate(PickupPopup, PickupPopupPrefab.transform);
-			
+
 			//pickUpPopUp.DamageText.text = $"{damage}";
 
 			//pickUpPopUp.PlayPopUp();
@@ -47,10 +67,7 @@ namespace CodeBase.Enemy
 			HealthChanged?.Invoke();
 		}
 
-		public void LevelUp()
-		{
-			
-		}
+		public void LevelUp() { }
 
 	}
 

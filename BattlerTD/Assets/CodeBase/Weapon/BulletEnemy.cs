@@ -23,7 +23,6 @@ namespace CodeBase.Weapon
 
 		private void OnTriggerEnter(Collider other)
 		{
-			Debug.Log(other.name);
 			other.transform.GetComponent<IHealth>().TakeDamage(_damage);
 			//Instantiate(_explosionVFX, other.transform.position, Quaternion.identity);
 			Destroy(gameObject);

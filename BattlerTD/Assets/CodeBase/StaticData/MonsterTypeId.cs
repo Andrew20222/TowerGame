@@ -7,7 +7,11 @@ namespace CodeBase.StaticData
     FatDragon = 3,
     Wizard = 4,
     Orc = 5,
-    AngryChest = 6,
-    Beholder = 7,
+    Skeleton = 6,
+    DeathElemental = 7, 
+    Slime = 8, 
+    SlimeDivided = 9,
+    Troll = 10,
+    GoblinTrio = 11,
   }
 }

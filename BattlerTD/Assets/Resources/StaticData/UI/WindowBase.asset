@@ -14,4 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Configs:
   - WindowId: 2
+    MenuPrefab: {fileID: 0}
     Template: {fileID: 0}
+    ScorePrefab: {fileID: 0}
+    DeathPrefab: {fileID: 0}

@@ -11,6 +11,7 @@ namespace CodeBase.StaticData
     public List<EnemySpawnerStaticData> EnemySpawners;
     public Vector3 InitialHeroPosition;
     public Vector3 InitialMainBuildingPosition;
+    public Grid Grid;
   }
 
 }

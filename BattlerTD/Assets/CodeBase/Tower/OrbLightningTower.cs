@@ -25,7 +25,10 @@ namespace CodeBase.Tower
 
 			if (_buildingService.CanBePlaced(this, _inAnotherTower))
 			{
-				_tower.material.color = Color.green;
+				foreach (Material material in _tower.materials)
+				{
+					material.color = Color.green;
+				}
 
 				foreach (ParticleSystem particleSystem in _particleSystems)
 				{
@@ -34,7 +37,10 @@ namespace CodeBase.Tower
 			}
 			else
 			{
-				_tower.material.color = Color.red;
+				foreach (Material material in _tower.materials)
+				{
+					material.color = Color.red;
+				}
 			}
 		}
 

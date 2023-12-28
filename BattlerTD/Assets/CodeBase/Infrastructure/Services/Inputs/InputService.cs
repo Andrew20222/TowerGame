@@ -6,17 +6,22 @@ namespace CodeBase.Infrastructure.Services.Inputs
 	public abstract class InputService : IInputService
 	{
 		protected const string Horizontal = "Horizontal";
+		protected const string Horizontal2 = "Horizontal2";
 		protected const string Vertical = "Vertical";
+		protected const string Vertical2 = "Vertical2";
 		private const string Button = "Fire";
 		private const string Button2 = "Fire2";
+		private const string Talent = "Talent";
 		
 		private bool _isDragging;
 		private int _towerButtonCounter;
-		private Vector2 _startTouch, swipeDelta;
+		private Vector2 _startTouch, _swipeDelta;
 
+		public event Action AttackButtonUnpressed;
 		public event Action TowerButtonPressed;
 		public event Action TowerButtonUnpressed;
-		public abstract Vector2 Axis { get; }
+		public abstract Vector2 MovingAxis { get; }
+		public abstract Vector2 RotatingAxis { get; }
 		public Touch Touch { get; set; }
 
 		public bool Tap { get; set; }
@@ -37,8 +42,24 @@ namespace CodeBase.Infrastructure.Services.Inputs
 			}
 		}
 
-		public bool IsAttackButtonUp() =>
-			SimpleInput.GetButtonUp(Button);
+		public bool IsAttackButtonUp()
+		{
+			if (SimpleInput.GetButtonUp(Button))
+				AttackButtonUnpressed?.Invoke();
+
+			return SimpleInput.GetButtonUp(Button);
+		}
+
+		public bool IsAttackButton() =>
+			SimpleInput.GetButton(Button);			
+		
+		public bool IsTalentButton() =>
+			SimpleInput.GetButton(Talent);			
+		public bool IsTalentButtonUp() =>
+			SimpleInput.GetButtonUp(Talent);		
+		
+		public bool IsAttackButtonDown() =>
+			SimpleInput.GetButtonDown(Button);
 
 		public bool IsTowerButtonUp() =>
 			SimpleInput.GetButtonUp(Button2);
@@ -64,12 +85,16 @@ namespace CodeBase.Infrastructure.Services.Inputs
 		}
 
 
-		protected static Vector2 SimpleInputAxis() =>
-			new Vector2(SimpleInput.GetAxis(Horizontal), SimpleInput.GetAxis(Vertical));
+		protected static Vector2 SimpleInputMovingAxis() =>
+			new Vector2(SimpleInput.GetAxis(Horizontal), SimpleInput.GetAxis(Vertical));	
+		
+		protected static Vector2 SimpleInputRotatingAxis() =>
+			new Vector2(SimpleInput.GetAxis(Horizontal2), SimpleInput.GetAxis(Vertical2));
 
 
 		public void Update()
 		{
+			IsAttackButtonUp();
 			IsAnyTowerButtonUp();
 			IsAnyTowerButtonDown();
 			Tap = SwipeDown = SwipeUp = SwipeLeft = SwipeRight = false;
@@ -102,8 +127,8 @@ namespace CodeBase.Infrastructure.Services.Inputs
 
 		private void ChooseDirection()
 		{
-			float x = swipeDelta.x;
-			float y = swipeDelta.y;
+			float x = _swipeDelta.x;
+			float y = _swipeDelta.y;
 			if (Mathf.Abs(x) > Mathf.Abs(y))
 			{
 				if (x < 0)
@@ -124,24 +149,29 @@ namespace CodeBase.Infrastructure.Services.Inputs
 			touch;
 
 		private bool CheckPassedDistance() =>
-			swipeDelta.magnitude > 100;
+			_swipeDelta.magnitude > 100;
 
 		private void CalculateDistance()
 		{
-			swipeDelta = Vector2.zero;
+			_swipeDelta = Vector2.zero;
 			if (_isDragging)
 			{
 				if (Input.touches.Length < 0)
-					swipeDelta = Input.touches[0].position - _startTouch;
+					_swipeDelta = Input.touches[0].position - _startTouch;
 				else if (Input.GetMouseButton(0))
-					swipeDelta = (Vector2) Input.mousePosition - _startTouch;
+					_swipeDelta = (Vector2) Input.mousePosition - _startTouch;
 			}
 		}
 
 		private void Reset()
 		{
-			_startTouch = swipeDelta = Vector2.zero;
+			_startTouch = _swipeDelta = Vector2.zero;
 			_isDragging = false;
+		}
+
+		public void Dispose()
+		{
+			
 		}
 	}
 }
